@@ -35,7 +35,7 @@ def admincommands(m):
     #-
     #- Say the available admin-only commands. This does not display command aliases.
 
-    commands = [key for key in m.bot.admin_commands.keys() if not m.bot.admin_commands[key][1]]
+    commands = [key for key in list(m.bot.admin_commands.keys()) if not m.bot.admin_commands[key][1]]
     commands.sort()
     if len(commands) == 0:
         m.bot.private_message(m.location, "I have no available admin commands. See "
@@ -151,7 +151,7 @@ def commands(m):
     #-
     #- Say the available all-user commands. This does not display command aliases.
 
-    commands = [key for key in m.bot.commands.keys() if not m.bot.commands[key][1]]
+    commands = [key for key in list(m.bot.commands.keys()) if not m.bot.commands[key][1]]
     commands.sort()
     if len(commands) == 0:
         m.bot.private_message(m.location, "I have no available commands. See "

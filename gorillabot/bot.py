@@ -17,12 +17,12 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from configure import Configurator
-from executor import Executor
+from .configure import Configurator
+from .executor import Executor
 import json
 import logging
 from logging import handlers
-from message import *
+from .message import *
 import os
 import pickle
 import queue
@@ -121,7 +121,7 @@ class Bot(object):
         if nick:
             ops = [nick]
         else:
-            ops = botops.keys()
+            ops = list(botops.keys())
         self.response_lock.acquire()
         ignored_messages = []
         for op in ops:
@@ -189,7 +189,7 @@ class Bot(object):
 
     def is_admin(self, user):
         """Check if user is a bot admin."""
-        botops = self.configuration["botops"].keys()
+        botops = list(self.configuration["botops"].keys())
         mask = self.parse_hostmask(user)
         for op in botops:
             op_info = self.configuration["botops"][op]
@@ -207,7 +207,7 @@ class Bot(object):
         if chans is None:
             chans = self.configuration["chans"]
             if chans:
-                for chan in chans.keys():
+                for chan in list(chans.keys()):
                     if not chans[chan]["joined"]:
                         self.logger.info("Joining {0}.".format(chan))
                         self.send('JOIN ' + chan)
@@ -254,7 +254,7 @@ class Bot(object):
                 if buffer.endswith("'"):
                     buffer = buffer[:-1]
                 list_of_lines = buffer.split('\\r\\n')
-                list_of_lines = filter(None, list_of_lines)
+                list_of_lines = [_f for _f in list_of_lines if _f]
                 for line in list_of_lines:
                     line = line.strip().split()
                     if line != "":

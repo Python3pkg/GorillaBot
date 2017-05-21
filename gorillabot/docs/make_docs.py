@@ -60,7 +60,7 @@ def parse_command(command):
     else:
         m = re.search(command_name_regex, command)
         if m:
-            print("No documentation found for {}.".format(m.group('command')))
+            print(("No documentation found for {}.".format(m.group('command'))))
     return None, None
 
 

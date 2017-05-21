@@ -47,19 +47,19 @@ class Configurator(object):
                 ans = ''
                 while ans not in ["0", "1"]:
                     print("\n[0] Create new configuration\n[1] Exit")
-                    ans = input("")
+                    ans = eval(input(""))
                     if ans == "0":
                         return self.create_new()
                     elif ans == "1":
                         return False
             elif data is not None:
                 print("Existing configurations:")
-                for key in data.keys():
-                    print('\t' + key)
+                for key in list(data.keys()):
+                    print(('\t' + key))
                 print("\n[0] Load configuration\n[1] Create new configuration\n[2] View "
                       "configuration\n"
                       "[3] Remove configuration\n[4] Exit")
-                ans = input("")
+                ans = eval(input(""))
                 if ans == "0":
                     return self.load_settings()
                 elif ans == "1":
@@ -75,8 +75,8 @@ class Configurator(object):
     def reset(self):
         """Set all "joined" values to false for channels."""
         settings = self.get_settings()
-        for config in settings.keys():
-            for chan in settings[config]["chans"].keys():
+        for config in list(settings.keys()):
+            for chan in list(settings[config]["chans"].keys()):
                 settings[config]["chans"][chan]["joined"] = False
             for op in settings[config]["botops"]:
                 settings[config]["botops"][op] = {"user": "", "host": ""}
@@ -94,8 +94,8 @@ class Configurator(object):
                 json.dump({}, f)
                 blob = {}
         except ValueError:
-            overwrite = input("Configuration file is formatted incorrectly. Erase and create a new"
-                              " one? [y/n] ")
+            overwrite = eval(input("Configuration file is formatted incorrectly. Erase and create a new"
+                              " one? [y/n] "))
             if overwrite.lower() == "y":
                 self.logger.info("Overwrote incorrectly-formatted configuration file.")
                 with open(self.file_path, "w") as f:
@@ -113,9 +113,9 @@ class Configurator(object):
             print('\n')
             name = ""
             while name == "":
-                name = input("Unique name for this configuration: ")
-                if name in existing.keys():
-                    print('The name "{0}" is not unique.'.format(name))
+                name = eval(input("Unique name for this configuration: "))
+                if name in list(existing.keys()):
+                    print(('The name "{0}" is not unique.'.format(name)))
                     name = ""
             settings = {name: {}}
             settings[name]["nick"] = self.prompt("Nick", "GorillaBot")
@@ -147,12 +147,12 @@ class Configurator(object):
     def delete(self):
         """Delete a configuration."""
         settings = self.get_settings()
-        name = input("Please choose an existing configuration: ")
+        name = eval(input("Please choose an existing configuration: "))
         try:
             del settings[name]
             self.save_config(settings)
         except KeyError:
-            print("No configuration named {}.".format(name))
+            print(("No configuration named {}.".format(name)))
 
     def display(self, settings = None, name = None):
         """Display a configuration."""
@@ -160,21 +160,21 @@ class Configurator(object):
             settings = self.get_settings()
             name = ""
             while name == "":
-                name = input("Please choose an existing configuration: ")
-                if name not in settings.keys():
-                    print("No configuration named {}.".format(name))
+                name = eval(input("Please choose an existing configuration: "))
+                if name not in list(settings.keys()):
+                    print(("No configuration named {}.".format(name)))
                     name = ""
-        chans = ", ".join(settings[name]["chans"].keys())
-        botops = ", ".join(settings[name]["botops"].keys())
+        chans = ", ".join(list(settings[name]["chans"].keys()))
+        botops = ", ".join(list(settings[name]["botops"].keys()))
         password = "[hidden]" if settings[name]["password"] else "[none]"
         youtube = "[hidden]" if settings[name]["youtube"] else "[none]"
         forecast = "[hidden]" if settings[name]["forecast"] else "[none]"
-        print(
+        print((
             "\n------------------------------\n Nickname: {0}\n Real name: {1}\n Identifier: {2}\n"
             " Channels: {3}\n Bot operator(s): {4}\n Server password: {5}\n YouTube API key: {6}\n"
             " Forecast.io API key: {7}\n------------------------------\n"
             .format(settings[name]["nick"], settings[name]["realname"], settings[name]["ident"],
-                    chans, botops, password, youtube, forecast))
+                    chans, botops, password, youtube, forecast)))
         return name
 
     def verify(self, settings, name):
@@ -196,7 +196,7 @@ class Configurator(object):
             field += " [DEFAULT: {}]".format(default)
         field += ": "
         if not hidden:
-            answer = input(field)
+            answer = eval(input(field))
         else:
             answer = getpass(field)
         if default is not None and answer == '':
